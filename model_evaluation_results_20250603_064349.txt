@@ -1,0 +1,147 @@
+Transformer Model Evaluation Results
+================================================================================
+
+Model: model_128d
+----------------------------------------
+Configuration:
+  name: model_128d
+  d_model: 128
+  num_heads: 2
+  num_layers: 2
+  d_ff: 75
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 3200
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.1154
+    Recall: 0.3333
+    F1-Score: 0.1697
+  ROUGE2:
+    Precision: 0.0264
+    Recall: 0.0783
+    F1-Score: 0.0391
+  ROUGEL:
+    Precision: 0.0807
+    Recall: 0.2350
+    F1-Score: 0.1190
+
+Example Generations:
+
+Example 1:
+Original Text: Still Life, Vase with Daisies, and Poppies dibuat beberapa bulan sebelum van Gogh meninggal. Still Life, Vase with Daisies, and Poppies melampaui perkiraan sebelumnya US$50 juta pada pelelangan di Sot...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: <UNK> <UNK> <UNK> <UNK> <UNK> and <UNK> dibuat beberapa bulan sebelum van <UNK> meninggal <UNK> <UNK> <UNK> <UNK> <UNK> and <UNK> melampaui perkiraan sebelumnya us 50 juta pada <UNK> di <UNK> lukisan van <UNK> dibuat di rumah dokter <UNK> hanya beberapa bulan sebelum dirinya meninggal di tahun <UNK> karyanya ini adalah satu dari beberapa <UNK> yang terjual saat van <UNK> masih hidup
+----------------------------------------
+
+Example 2:
+Original Text: Foto tanggal 6 Agustus ini memperlihatkan keluarga sedang berpisah sebelum naik ke bus yang akan membawa mereka kembali ke Suriah. Pihak berwenang mengatakan migran tak terdaftar harus segera kembali ...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: foto tanggal 6 agustus ini memperlihatkan keluarga sedang <UNK> sebelum naik ke bus yang akan membawa mereka kembali ke suriah pihak berwenang mengatakan migran tak terdaftar harus segera kembali ke lokasi tempat <UNK> mereka sebagai upaya untuk mengurangi tekanan terhadap kota istanbul namun beberapa migran suriah ini mengatakan banyak dari mereka yang <UNK> ke <UNK> di suriah di mana <UNK> masih berlangsung
+----------------------------------------
+
+Example 3:
+Original Text: Para keluarga korban berada di tengah fan yang berkumpul di stadion Arena Conda di Chapeco. Chapecoense bertolak ke Kolombia untuk turun dalam leg pertama final Piala Amerika Selatan, Copa Sudamerican...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: para keluarga korban berada di tengah <UNK> yang berkumpul di stadion <UNK> <UNK> di <UNK> <UNK> <UNK> ke kolombia untuk turun dalam <UNK> pertama final piala amerika selatan <UNK> <UNK> melawan <UNK> <UNK> pesawat jatuh hari senin 28 11 dan menewaskan <UNK> orang melalui akun facebook <UNK> menyebut mereka adalah juara <UNK> hari ini kita <UNK> dengan tantangan baru hidup <UNK> kita
+----------------------------------------
+
+================================================================================
+
+Model: model_8k_vocab
+----------------------------------------
+Configuration:
+  name: model_8k_vocab
+  d_model: 56
+  num_heads: 4
+  num_layers: 2
+  d_ff: 96
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 8000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.1272
+    Recall: 0.3684
+    F1-Score: 0.1873
+  ROUGE2:
+    Precision: 0.0330
+    Recall: 0.0979
+    F1-Score: 0.0488
+  ROUGEL:
+    Precision: 0.0885
+    Recall: 0.2582
+    F1-Score: 0.1305
+
+Example Generations:
+
+Example 1:
+Original Text: Still Life, Vase with Daisies, and Poppies dibuat beberapa bulan sebelum van Gogh meninggal. Still Life, Vase with Daisies, and Poppies melampaui perkiraan sebelumnya US$50 juta pada pelelangan di Sot...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: <UNK> life <UNK> with <UNK> and <UNK> dibuat beberapa bulan sebelum van gogh meninggal <UNK> life <UNK> with <UNK> and <UNK> melampaui perkiraan sebelumnya us 50 juta pada <UNK> di <UNK> lukisan van gogh dibuat di rumah dokter <UNK> hanya beberapa bulan sebelum dirinya meninggal di tahun <UNK> karyanya ini adalah satu dari beberapa <UNK> yang terjual saat van gogh masih hidup
+----------------------------------------
+
+Example 2:
+Original Text: Foto tanggal 6 Agustus ini memperlihatkan keluarga sedang berpisah sebelum naik ke bus yang akan membawa mereka kembali ke Suriah. Pihak berwenang mengatakan migran tak terdaftar harus segera kembali ...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: foto tanggal 6 agustus ini memperlihatkan keluarga sedang berpisah sebelum naik ke bus yang akan membawa mereka kembali ke suriah pihak berwenang mengatakan migran tak terdaftar harus segera kembali ke lokasi tempat pendaftaran mereka sebagai upaya untuk mengurangi tekanan terhadap kota istanbul namun beberapa migran suriah ini mengatakan banyak dari mereka yang dideportasi ke idlib di suriah di mana peperangan masih berlangsung
+----------------------------------------
+
+Example 3:
+Original Text: Para keluarga korban berada di tengah fan yang berkumpul di stadion Arena Conda di Chapeco. Chapecoense bertolak ke Kolombia untuk turun dalam leg pertama final Piala Amerika Selatan, Copa Sudamerican...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: para keluarga korban berada di tengah <UNK> yang berkumpul di stadion arena <UNK> di <UNK> <UNK> bertolak ke kolombia untuk turun dalam <UNK> pertama final piala amerika selatan <UNK> <UNK> melawan atletico <UNK> pesawat jatuh hari senin 28 11 dan menewaskan 71 orang melalui akun facebook <UNK> menyebut mereka adalah juara abadi hari ini kita terbangun dengan tantangan baru hidup mengajarkan kita
+----------------------------------------
+
+================================================================================
+
+Model: model_1layer
+----------------------------------------
+Configuration:
+  name: model_1layer
+  d_model: 88
+  num_heads: 4
+  num_layers: 1
+  d_ff: 352
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 5000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.1218
+    Recall: 0.3523
+    F1-Score: 0.1792
+  ROUGE2:
+    Precision: 0.0300
+    Recall: 0.0891
+    F1-Score: 0.0444
+  ROUGEL:
+    Precision: 0.0849
+    Recall: 0.2478
+    F1-Score: 0.1253
+
+Example Generations:
+
+Example 1:
+Original Text: Still Life, Vase with Daisies, and Poppies dibuat beberapa bulan sebelum van Gogh meninggal. Still Life, Vase with Daisies, and Poppies melampaui perkiraan sebelumnya US$50 juta pada pelelangan di Sot...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: <UNK> life <UNK> with <UNK> and <UNK> dibuat beberapa bulan sebelum van <UNK> meninggal <UNK> life <UNK> with <UNK> and <UNK> melampaui perkiraan sebelumnya us 50 juta pada <UNK> di <UNK> lukisan van <UNK> dibuat di rumah dokter <UNK> hanya beberapa bulan sebelum dirinya meninggal di tahun <UNK> karyanya ini adalah satu dari beberapa <UNK> yang terjual saat van <UNK> masih hidup
+----------------------------------------
+
+Example 2:
+Original Text: Foto tanggal 6 Agustus ini memperlihatkan keluarga sedang berpisah sebelum naik ke bus yang akan membawa mereka kembali ke Suriah. Pihak berwenang mengatakan migran tak terdaftar harus segera kembali ...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: foto tanggal 6 agustus ini memperlihatkan keluarga sedang <UNK> sebelum naik ke bus yang akan membawa mereka kembali ke suriah pihak berwenang mengatakan migran tak terdaftar harus segera kembali ke lokasi tempat pendaftaran mereka sebagai upaya untuk mengurangi tekanan terhadap kota istanbul namun beberapa migran suriah ini mengatakan banyak dari mereka yang <UNK> ke <UNK> di suriah di mana <UNK> masih berlangsung
+----------------------------------------
+
+Example 3:
+Original Text: Para keluarga korban berada di tengah fan yang berkumpul di stadion Arena Conda di Chapeco. Chapecoense bertolak ke Kolombia untuk turun dalam leg pertama final Piala Amerika Selatan, Copa Sudamerican...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: para keluarga korban berada di tengah <UNK> yang berkumpul di stadion arena <UNK> di <UNK> <UNK> bertolak ke kolombia untuk turun dalam <UNK> pertama final piala amerika selatan <UNK> <UNK> melawan atletico <UNK> pesawat jatuh hari senin 28 11 dan menewaskan 71 orang melalui akun facebook <UNK> menyebut mereka adalah juara abadi hari ini kita <UNK> dengan tantangan baru hidup mengajarkan kita
+----------------------------------------
+
+================================================================================
+

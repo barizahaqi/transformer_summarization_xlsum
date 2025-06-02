@@ -4,7 +4,7 @@ from collections import Counter
 
 
 class SimpleTokenizer:
-    def __init__(self, vocab_size=32000, min_freq=2):
+    def __init__(self, vocab_size=5000, min_freq=2):
         """
         Initialize simple tokenizer.
 
@@ -18,10 +18,11 @@ class SimpleTokenizer:
         self.idx2word = {}
 
         # Special tokens
-        self.pad_token = "<pad>"
-        self.unk_token = "<unk>"
-        self.bos_token = "<bos>"
-        self.eos_token = "<eos>"
+        self.pad_token = "<PAD>"
+        self.unk_token = "<UNK>"
+        self.bos_token = "<BOS>"
+        self.eos_token = "<EOS>"
+        self.sep_token = "<SEP>"
 
         # Add special tokens to vocabulary
         self.word2idx = {
@@ -29,6 +30,7 @@ class SimpleTokenizer:
             self.unk_token: 1,
             self.bos_token: 2,
             self.eos_token: 3,
+            self.sep_token: 4,
         }
         self.idx2word = {v: k for k, v in self.word2idx.items()}
 
@@ -83,6 +85,9 @@ class SimpleTokenizer:
         Args:
             text (str): Input text
             add_special_tokens (bool): Whether to add BOS/EOS tokens
+
+        Returns:
+            numpy.ndarray: Array of token indices
         """
         words = self.preprocess_text(text)
 
@@ -106,16 +111,48 @@ class SimpleTokenizer:
 
         Args:
             indices: Array of token indices
+
+        Returns:
+            str: Decoded text
         """
         words = []
         for idx in indices:
             if idx in self.idx2word:
                 word = self.idx2word[idx]
-                if word in [self.pad_token, self.bos_token, self.eos_token]:
-                    continue
-                words.append(word)
+                if word not in [
+                    self.pad_token,
+                    self.bos_token,
+                    self.eos_token,
+                    self.sep_token,
+                ]:
+                    words.append(word)
 
         return " ".join(words)
+
+    def save(self, path):
+        """Save tokenizer to file."""
+        import json
+
+        data = {
+            "vocab_size": self.vocab_size,
+            "min_freq": self.min_freq,
+            "word2idx": self.word2idx,
+        }
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+    def load(self, path):
+        """Load tokenizer from file."""
+        import json
+
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.vocab_size = data["vocab_size"]
+        self.min_freq = data["min_freq"]
+        self.word2idx = data["word2idx"]
+        # Create idx2word by swapping keys and values
+        self.idx2word = {v: k for k, v in self.word2idx.items()}
 
     def pad_sequence(self, sequence, max_length):
         """

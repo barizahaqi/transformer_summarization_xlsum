@@ -7,29 +7,29 @@ from data.dataset import XLSumDataset
 
 def train_epoch(model, dataset, learning_rate=1e-4):
     """
-    Train for one epoch.
+    Train model for one epoch.
 
     Args:
         model: TransformerDecoder model
         dataset: XLSumDataset instance
-        learning_rate (float): Learning rate
+        learning_rate (float): Learning rate for gradient descent
     """
-    total_loss = 0
     num_batches = len(dataset.train_data) // dataset.batch_size
+    total_loss = 0
 
-    for _ in tqdm(range(num_batches), desc="Training"):
-        # Get batch
-        text_batch, summary_batch = dataset.get_batch("train")
+    for batch_idx in tqdm(range(num_batches), desc="Training"):
+        # Get batch of sequences in format <BOS> article <BOS> summary <EOS>
+        sequences, targets = dataset.get_batch("train")
 
         # Forward pass
-        logits = model.forward(text_batch)
+        logits = model.forward(sequences, training=True)
 
         # Compute loss
-        loss = model.compute_loss(logits, summary_batch)
+        loss = model.compute_loss(logits, targets)
         total_loss += loss
 
-        # Backward pass (gradient computation)
-        gradients = compute_gradients(model, logits, summary_batch)
+        # Compute gradients
+        gradients = compute_gradients(model, logits, targets)
 
         # Update parameters
         update_parameters(model, gradients, learning_rate)
@@ -52,16 +52,20 @@ def compute_gradients(model, logits, targets):
     # Compute gradients for output layer
     batch_size, seq_len, vocab_size = logits.shape
     logits_flat = logits.reshape(-1, vocab_size)
-    targets_flat = targets.reshape(-1)
+    targets_flat = targets.reshape(-1).astype(np.int32)  # Convert to int32
 
     # Gradient of loss w.r.t. logits
     probs = model.softmax(logits_flat)
-    probs[np.arange(len(targets_flat)), targets_flat] -= 1
+    probs[
+        np.arange(len(targets_flat), dtype=np.int32), targets_flat
+    ] -= 1  # Use int32 for indices
     d_logits = probs / batch_size
 
     # Gradient of loss w.r.t. output layer weights
     gradients["output_layer"] = np.matmul(
-        model.embeddings.token_embeddings[targets].reshape(-1, model.d_model).T,
+        model.embeddings.token_embeddings[targets.astype(np.int32)]
+        .reshape(-1, model.d_model)
+        .T,  # Convert to int32
         d_logits,
     )
     gradients["output_bias"] = np.sum(d_logits, axis=0)
@@ -129,27 +133,34 @@ def update_parameters(model, gradients, learning_rate):
         layer.self_attention.W_o -= learning_rate * gradients.get(f"attn_{i}_W_o", 0)
 
 
-def evaluate(model, dataset, split="validation"):
+def evaluate(model, dataset, split="val"):
     """
     Evaluate model on validation/test set.
 
     Args:
         model: TransformerDecoder model
         dataset: XLSumDataset instance
-        split (str): Dataset split to evaluate on
+        split (str): Which split to evaluate on ('val' or 'test')
+
+    Returns:
+        float: Average loss on the evaluation set
     """
+    # Map split name to dataset attribute
+    split_map = {"val": "val_data", "test": "test_data"}
+    data_attr = split_map[split]
+
+    num_batches = len(getattr(dataset, data_attr)) // dataset.batch_size
     total_loss = 0
-    num_batches = len(getattr(dataset, f"{split}_data")) // dataset.batch_size
 
     for _ in tqdm(range(num_batches), desc=f"Evaluating on {split}"):
-        # Get batch
-        text_batch, summary_batch = dataset.get_batch(split)
+        # Get batch of sequences
+        sequences, targets = dataset.get_batch(split)
 
-        # Forward pass
-        logits = model.forward(text_batch, training=False)
+        # Forward pass (no training)
+        logits = model.forward(sequences, training=False)
 
         # Compute loss
-        loss = model.compute_loss(logits, summary_batch)
+        loss = model.compute_loss(logits, targets)
         total_loss += loss
 
     return total_loss / num_batches
@@ -167,8 +178,9 @@ def main():
             "max_seq_length": 64,
             "batch_size": 32,
             "vocab_size": 3200,
-            "num_epochs": 5,
+            "num_epochs": 3,
             "learning_rate": 1e-4,
+            "max_samples": 100,  # Use 1000 samples for each split
         },
         {
             "name": "model_8k_vocab",
@@ -179,8 +191,9 @@ def main():
             "max_seq_length": 64,
             "batch_size": 32,
             "vocab_size": 8000,
-            "num_epochs": 5,
+            "num_epochs": 3,
             "learning_rate": 1e-4,
+            "max_samples": 100,  # Use 1000 samples for each split
         },
         {
             "name": "model_1layer",
@@ -191,8 +204,9 @@ def main():
             "max_seq_length": 64,
             "batch_size": 32,
             "vocab_size": 5000,
-            "num_epochs": 5,
+            "num_epochs": 3,
             "learning_rate": 1e-4,
+            "max_samples": 100,
         },
     ]
 
@@ -202,11 +216,13 @@ def main():
         print(f"{'='*50}")
 
         # Initialize dataset
-        print("Loading dataset...")
+        print(f"Initializing dataset for {config['name']}...")
         dataset = XLSumDataset(
             max_seq_length=config["max_seq_length"],
             batch_size=config["batch_size"],
             vocab_size=config["vocab_size"],
+            model_name=config["name"],
+            max_samples=config["max_samples"],  # Pass max_samples to dataset
         )
 
         # Initialize model
@@ -264,8 +280,8 @@ Total parameters: {total_params:,}
             # Train
             train_loss = train_epoch(model, dataset, config["learning_rate"])
 
-            # Evaluate
-            val_loss = evaluate(model, dataset, "validation")
+            # Evaluate on validation set
+            val_loss = evaluate(model, dataset, "val")
 
             # Print epoch statistics
             epoch_time = time.time() - start_time

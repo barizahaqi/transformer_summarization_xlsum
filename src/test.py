@@ -116,39 +116,95 @@ def evaluate_model(model, dataset, split="test"):
     Args:
         model: TransformerDecoder model
         dataset: XLSumDataset instance
-        split (str): Dataset split to evaluate on (only test is used)
+        split (str): Dataset split to evaluate on ('val' or 'test')
 
     Returns:
         dict: ROUGE scores for the test set
     """
-    num_batches = len(getattr(dataset, f"{split}_data")) // dataset.batch_size
+    # Map split name to dataset attribute
+    split_map = {"val": "val_data", "test": "test_data"}
+    data_attr = split_map[split]
+    split_data = getattr(dataset, data_attr)
+
+    # Initialize ROUGE scorer
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
 
     # Lists to store all references and predictions for ROUGE calculation
     all_references = []
     all_predictions = []
+    all_unk_counts = []  # Track UNK tokens
+    all_summary_lengths = []  # Track summary lengths
 
-    for _ in tqdm(range(num_batches), desc=f"Evaluating on {split}"):
-        # Get batch
-        text_batch, summary_batch = dataset.get_batch(split)
+    # Evaluate each example in the split
+    for example in tqdm(split_data, desc=f"Evaluating on {split}"):
+        # Tokenize input text properly
+        article_tokens = dataset.tokenizer.encode(
+            example["text"], add_special_tokens=False
+        )
+        input_seq = np.concatenate(
+            [
+                np.array([dataset.tokenizer.word2idx[dataset.bos_token]]),  # <BOS>
+                article_tokens,
+                np.array([dataset.tokenizer.word2idx[dataset.sep_token]]),  # <SEP>
+            ]
+        )
 
-        # Generate summaries for ROUGE evaluation
-        for i in range(len(text_batch)):
-            # Get reference summary
-            reference = dataset.decode_batch([summary_batch[i]])[0]
-
-            # Generate prediction
-            generated_tokens = model.generate(
-                start_token=dataset.tokenizer.word2idx[dataset.tokenizer.bos_token],
-                max_length=dataset.max_seq_length,
-                temperature=0.7,
+        # Pad sequence
+        if len(input_seq) < dataset.max_seq_length:
+            input_padding = np.full(
+                dataset.max_seq_length - len(input_seq),
+                dataset.tokenizer.word2idx[dataset.pad_token],
             )
-            prediction = dataset.decode_batch([generated_tokens[0]])[0]
+            input_seq = np.concatenate([input_seq, input_padding])
+        else:
+            input_seq = input_seq[: dataset.max_seq_length]
 
-            all_references.append(reference)
-            all_predictions.append(prediction)
+        # Generate prediction
+        generated_tokens = model.generate(
+            input_article_tokens=input_seq,
+            word2idx=dataset.tokenizer.word2idx,
+            max_length=dataset.max_seq_length,
+            temperature=0.7,
+        )
+
+        # Decode reference and generated summaries
+        reference = example["summary"].lower()  # Convert to lowercase
+        decoded = dataset.decode_batch([generated_tokens])
+        prediction = decoded[0]["summary"].lower()  # Convert to lowercase
+
+        # Count UNK tokens in prediction
+        pred_tokens = dataset.tokenizer.encode(prediction, add_special_tokens=False)
+        token_words = [
+            dataset.tokenizer.idx2word.get(int(t), "<UNK>") for t in pred_tokens
+        ]
+        unk_count = sum(1 for t in token_words if t == "<UNK>")
+
+        # Store metrics
+        all_references.append(reference)
+        all_predictions.append(prediction)
+        all_unk_counts.append(unk_count)
+        all_summary_lengths.append(len(token_words))
 
     # Calculate ROUGE scores
     rouge_scores = calculate_rouge_scores(all_references, all_predictions)
+
+    # Print debugging information
+    print("\nEvaluation Statistics:")
+    print(f"Number of samples evaluated: {len(all_predictions)}")
+    print(f"Average summary length: {np.mean(all_summary_lengths):.1f} tokens")
+    print(f"Average UNK tokens per summary: {np.mean(all_unk_counts):.1f}")
+    print(
+        f"UNK token ratio: {np.mean(all_unk_counts) / np.mean(all_summary_lengths):.4f}"
+    )
+
+    # Print some example predictions
+    print("\nExample Predictions (first 3):")
+    for i in range(min(3, len(all_predictions))):
+        print(f"\nExample {i+1}:")
+        print(f"Reference: {all_references[i]}")
+        print(f"Prediction: {all_predictions[i]}")
+        print(f"UNK tokens: {all_unk_counts[i]}")
+        print(f"Summary length: {all_summary_lengths[i]}")
 
     return rouge_scores
 
@@ -166,28 +222,62 @@ def generate_summaries(model, dataset, num_examples=5, temperature=0.7):
     Returns:
         list: List of dictionaries containing original text, original summary, and generated summary
     """
-    # Get examples from test set
-    text_batch, summary_batch = dataset.get_batch("test")
-
     results = []
-    for i in range(min(num_examples, len(text_batch))):
-        # Get original text and summary
-        original_text = dataset.decode_batch([text_batch[i]])[0]
-        original_summary = dataset.decode_batch([summary_batch[i]])[0]
+
+    # Get examples from test set
+    test_examples = dataset.test_data[:num_examples]
+
+    for example in test_examples:
+        # Tokenize input text properly
+        article_tokens = dataset.tokenizer.encode(
+            example["text"], add_special_tokens=False
+        )
+        input_seq = np.concatenate(
+            [
+                np.array([dataset.tokenizer.word2idx[dataset.bos_token]]),  # <BOS>
+                article_tokens,
+                np.array([dataset.tokenizer.word2idx[dataset.sep_token]]),  # <SEP>
+            ]
+        )
+
+        # Pad sequence
+        if len(input_seq) < dataset.max_seq_length:
+            input_padding = np.full(
+                dataset.max_seq_length - len(input_seq),
+                dataset.tokenizer.word2idx[dataset.pad_token],
+            )
+            input_seq = np.concatenate([input_seq, input_padding])
+        else:
+            input_seq = input_seq[: dataset.max_seq_length]
 
         # Generate summary
         generated_tokens = model.generate(
-            start_token=dataset.tokenizer.word2idx[dataset.tokenizer.bos_token],
+            input_article_tokens=input_seq,
+            word2idx=dataset.tokenizer.word2idx,
             max_length=dataset.max_seq_length,
             temperature=temperature,
         )
-        generated_summary = dataset.decode_batch([generated_tokens[0]])[0]
+
+        # Decode generated summary
+        decoded = dataset.decode_batch([generated_tokens])
+        generated_summary = decoded[0]["summary"]
+
+        # Count UNK tokens in generated summary
+        pred_tokens = dataset.tokenizer.encode(
+            generated_summary, add_special_tokens=False
+        )
+        token_words = [
+            dataset.tokenizer.idx2word.get(int(t), "<UNK>") for t in pred_tokens
+        ]
+        unk_count = sum(1 for t in token_words if t == "<UNK>")
 
         results.append(
             {
-                "original_text": original_text,
-                "original_summary": original_summary,
+                "original_text": example["text"],
+                "original_summary": example["summary"].lower(),
                 "generated_summary": generated_summary,
+                "unk_count": unk_count,
+                "summary_length": len(token_words),
             }
         )
 
@@ -209,6 +299,8 @@ def print_results(results):
         print(f"Original Text: {result['original_text'][:200]}...")
         print(f"Original Summary: {result['original_summary']}")
         print(f"Generated Summary: {result['generated_summary']}")
+        print(f"UNK tokens: {result['unk_count']}")
+        print(f"Summary length: {result['summary_length']}")
         print("-" * 80)
 
 
@@ -268,7 +360,6 @@ def save_results_to_file(results_dict, filename=None):
 
 
 def main():
-    # Model configurations - exactly matching train.py
     model_configs = {
         "model_128d": {
             "name": "model_128d",
@@ -318,10 +409,15 @@ def main():
                 max_seq_length=config["max_seq_length"],
                 batch_size=config["batch_size"],
                 vocab_size=config["vocab_size"],
+                model_name=config["name"],
+                max_samples=None,  # Use full dataset
             )
 
             # Load model
             model = load_model(config["weights_file"], dataset, config)
+
+            # Print dataset size
+            print(f"Test set size: {len(dataset.test_data)} samples")
 
             # Evaluate on test set
             rouge_scores = evaluate_model(model, dataset, "test")
@@ -350,6 +446,7 @@ def main():
                 "rouge_scores": rouge_scores,
                 "examples": examples,
                 "total_params": total_params,
+                "test_set_size": len(dataset.test_data),
             }
 
             # Print results for this model
@@ -361,6 +458,7 @@ def main():
             print(f"  Number of layers: {config['num_layers']}")
             print(f"  Feed-forward dimension: {config['d_ff']}")
             print(f"  Total parameters: {total_params:,}")
+            print(f"  Test set size: {len(dataset.test_data)} samples")
             print("\nROUGE Scores:")
             for metric in ["rouge1", "rouge2", "rougeL"]:
                 scores = rouge_scores[metric]

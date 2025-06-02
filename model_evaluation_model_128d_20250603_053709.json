@@ -1,0 +1,36 @@
+{
+  "timestamp": "20250603_053709",
+  "model_name": "model_128d",
+  "evaluation_scores": {
+    "rouge1": 0.19148449068661832,
+    "rouge2": 0.0,
+    "rougeL": 0.17957972878185643
+  },
+  "generated_summaries": [
+    {
+      "original_text": "<UNK> <UNK> 17 sudah digunakan digunakan di banyak negara kementerian pertahanan inggris telah menandatangani kontrak senilai 9 juta untuk membeli lebih dari 25 000 <UNK> <UNK> jenis <UNK> 17 <UNK>",
+      "original_summary": "Sebuah mahakarya Vincent van Gogh, yang dilukis pada akhir kehidupannya, terjual di New York sebesar US$61,8 juta atau Rp752 miliar.",
+      "generated_summary": "mencerminkan <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>"
+    },
+    {
+      "original_text": "pengunjuk rasa syiah di <UNK> irak <UNK> <UNK> anti arab saudi terkait eksekusi <UNK> kedutaan besar arab saudi <UNK> dan dibakar pada hari sabtu 02 01 setelah negara itu <UNK>",
+      "original_summary": "Ribuan pengungsi Suriah punya waktu hingga Selasa (20/08) untuk meninggalkan Istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di Turki itu.",
+      "generated_summary": "mendukung <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>"
+    },
+    {
+      "original_text": "seorang <UNK> dalam <UNK> 4 november membawa poster <UNK> ahok status calon gubernur basuki <UNK> purnama tidak <UNK> dan dia tetap bisa ikut proses pilkada sampai selesai kata <UNK> dki",
+      "original_summary": "Ribuan orang berkumpul di kota Chapeco, Brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, Chapecoense.",
+      "generated_summary": "menangkap penangkapan salah washington setya 1980 golkar agen kota dingin <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>"
+    },
+    {
+      "original_text": "anak anak dikatakan mengalami trauma kehilangan rumah dan teman para peneliti dari universitas <UNK> mengatakan anak anak yang berusia antara tiga hingga lima tahun menunjukkan gejala gejala seperti <UNK> <UNK>",
+      "original_summary": "Kelompok militan Kurdi TAK mengatakan pihaknya melancarkan serangan mematikan di ibu kota Turki, Ankara, pada Minggu (13/03).",
+      "generated_summary": "tas <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>"
+    },
+    {
+      "original_text": "para petugas mengirim kertas suara dari <UNK> kuala lumpur kenaikan <UNK> pemilih ini antara lain diperkirakan akan terjadi di malaysia seperti disampaikan oleh kepala bidang koordinator fungsi politik di <UNK>",
+      "original_summary": "Sejumlah tenaga kesehatan di India dilaporkan mengalami serangan dari anggota masyarakat selagi berupaya menghentikan penyebaran virus corona.",
+      "generated_summary": "berlebihan pakaian akibatnya <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>"
+    }
+  ]
+}

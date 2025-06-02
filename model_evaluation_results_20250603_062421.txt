@@ -1,0 +1,147 @@
+Transformer Model Evaluation Results
+================================================================================
+
+Model: model_128d
+----------------------------------------
+Configuration:
+  name: model_128d
+  d_model: 128
+  num_heads: 2
+  num_layers: 2
+  d_ff: 75
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 3200
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.1455
+    Recall: 0.1688
+    F1-Score: 0.1538
+  ROUGE2:
+    Precision: 0.0292
+    Recall: 0.0348
+    F1-Score: 0.0312
+  ROUGEL:
+    Precision: 0.1379
+    Recall: 0.1607
+    F1-Score: 0.1461
+
+Example Generations:
+
+Example 1:
+Original Text: sebagian kalangan di israel mempertanyakan klaim bahwa <UNK> <UNK> adalah yahudi mereka adalah <UNK> pertama dari 7 200 <UNK> komunitas <UNK> <UNK> yang diizinkan <UNK> di israel dari daerah di...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: maju di <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>
+----------------------------------------
+
+Example 2:
+Original Text: seorang <UNK> asal australia dipecat akibat <UNK> <UNK> <UNK> tak dapat <UNK> di singapura <UNK> <UNK> <UNK> keluhan yang <UNK> dengan kata kata tak <UNK> di facebook memberi <UNK> singapura...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: yang islam akan <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>
+----------------------------------------
+
+Example 3:
+Original Text: <UNK> yang terbakar disebut hanya punya satu pintu dan sebagian besar <UNK> <UNK> besi api <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> 14 september lalu dan polisi mengatakan keduanya termasuk dalam...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: sakit kopi sasaran petenis international arus tangan spesies resmi hati artikel kopi tahunan <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>
+----------------------------------------
+
+================================================================================
+
+Model: model_8k_vocab
+----------------------------------------
+Configuration:
+  name: model_8k_vocab
+  d_model: 56
+  num_heads: 4
+  num_layers: 2
+  d_ff: 96
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 8000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.0935
+    Recall: 0.0761
+    F1-Score: 0.0829
+  ROUGE2:
+    Precision: 0.0125
+    Recall: 0.0099
+    F1-Score: 0.0109
+  ROUGEL:
+    Precision: 0.0894
+    Recall: 0.0728
+    F1-Score: 0.0792
+
+Example Generations:
+
+Example 1:
+Original Text: massa hti memadati kawasan sekitar pengadilan tata usaha negara senin 07 05 dengan demikian hti tetap dibubarkan sesuai perppu nomor 2 tahun 2017 tentang organisasi <UNK> memutuskan gugatan <UNK> dito...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: bukannya unggul <UNK> <UNK> <UNK> misi mendanai ketertiban bogor tautan <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> berupa berpuasa lelang
+----------------------------------------
+
+Example 2:
+Original Text: who mengatakan kenaikan penderita kanker akibat perubahan gaya hidup data untuk 2012 menunjukkan dalam kurun waktu empat tahun sejak 2008 penderita kanker bertambah hampir 13 juta selama kurun ini jum...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: penalti picasso gading <UNK> premium analis <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> kebetulan <UNK> <UNK> <UNK>
+----------------------------------------
+
+Example 3:
+Original Text: ombudsman menyatakan pemprov dki jakarta setidaknya melanggar empat aturan pada penutupan jalan jati baru tanah abang namun belum ada sinyal anies bakal memenuhi permintaan itu apalagi kajian ombudsma...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: selisih tandas pemutusan pop <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> limbah <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> perludem
+----------------------------------------
+
+================================================================================
+
+Model: model_1layer
+----------------------------------------
+Configuration:
+  name: model_1layer
+  d_model: 88
+  num_heads: 4
+  num_layers: 1
+  d_ff: 352
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 5000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.1251
+    Recall: 0.1223
+    F1-Score: 0.1217
+  ROUGE2:
+    Precision: 0.0221
+    Recall: 0.0211
+    F1-Score: 0.0212
+  ROUGEL:
+    Precision: 0.1212
+    Recall: 0.1189
+    F1-Score: 0.1181
+
+Example Generations:
+
+Example 1:
+Original Text: keluarga korban pesawat <UNK> 42 300 <UNK> <UNK> milik maskapai <UNK> air yang jatuh di pegunungan bintang papua provinsi papua namun demikian tim sar belum menemukan kotak hitam pesawat tersebut...
+Original Summary: sebuah mahakarya vincent van gogh, yang dilukis pada akhir kehidupannya, terjual di new york sebesar us$61,8 juta atau rp752 miliar.
+Generated Summary: tito <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> harap
+----------------------------------------
+
+Example 2:
+Original Text: pemakaman <UNK> <UNK> <UNK> jalan jalan di mumbai mereka ditangkap polisi setelah mereka menulis komentar di situs jejaring sosial facebook berisi kritikan terhadap aparat kepolisian yang menghentikan...
+Original Summary: ribuan pengungsi suriah punya waktu hingga selasa (20/08) untuk meninggalkan istanbul atau mereka akan dipindahkan dengan paksa dari kota terbesar di turki itu.
+Generated Summary: <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> hiv <UNK> <UNK> <UNK>
+----------------------------------------
+
+Example 3:
+Original Text: dengan pesawat <UNK> pasukan inggris ini dikirim ke <UNK> komandan militer afghanistan meminta bantuan tersebut awal bulan ini untuk operasi di distrik <UNK> wilayah yang <UNK> pasukan inggris dari ta...
+Original Summary: ribuan orang berkumpul di kota chapeco, brasil, untuk mengenang korban jatuhnya pesawat, yang sebagian besar adalah anggota tim sepak bola kota tersebut, chapecoense.
+Generated Summary: di doa komunis papar bali gudang diplomatik <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> kamis <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>
+----------------------------------------
+
+================================================================================
+

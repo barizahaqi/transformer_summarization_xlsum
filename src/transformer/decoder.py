@@ -69,14 +69,14 @@ class TransformerDecoder:
         Forward pass of transformer decoder.
 
         Args:
-            x: Input tensor of shape (batch_size, seq_length)
+            x: Input tensor of shape (batch_size, seq_length) containing <BOS> article <SEP> summary <EOS>
             training (bool): Whether in training mode
         """
-
         # Ensure input is integer type for embedding lookup
         x = x.astype(np.int64)
 
-        # Create causal mask
+        # Create causal mask to prevent looking at future tokens
+        # This ensures each position can only attend to previous positions
         mask = self.create_mask(x)
 
         # Get embeddings
@@ -95,37 +95,78 @@ class TransformerDecoder:
 
         return logits
 
-    def generate(self, start_token, max_length, temperature=1.0):
+    def generate(
+        self, input_article_tokens, word2idx, max_length=None, temperature=1.0
+    ):
         """
-        Generate sequence using the decoder.
+        Generate summary tokens given input article tokens.
 
         Args:
-            start_token (int): Starting token index
-            max_length (int): Maximum sequence length to generate
-            temperature (float): Sampling temperature
+            input_article_tokens: Array of input article token indices
+            word2idx (dict): Dictionary mapping tokens to indices
+            max_length (int, optional): Maximum length of generated sequence. If None, uses model's max_seq_length.
+            temperature (float): Sampling temperature (higher = more random)
+
+        Returns:
+            numpy.ndarray: Generated token indices
         """
-        # Initialize sequence with start token
-        seq = np.array([[start_token]])
+        if max_length is None:
+            max_length = self.max_seq_length
 
-        for _ in range(max_length - 1):
+        # Get special token indices from the dataset's tokenizer
+        bos_idx = word2idx["<BOS>"]  # Get actual <BOS> token index
+        sep_idx = word2idx["<SEP>"]  # Get actual <SEP> token index
+        eos_idx = word2idx["<EOS>"]  # Get actual <EOS> token index
+        pad_idx = word2idx["<PAD>"]  # Get actual <PAD> token index
+
+        # Find where the article ends (before <SEP> token)
+        try:
+            sep_pos = np.where(input_article_tokens == sep_idx)[0][0]
+            # Only use tokens up to <SEP> (exclusive)
+            article_tokens = input_article_tokens[:sep_pos]
+        except IndexError:
+            # If no <SEP> found, use the whole sequence
+            article_tokens = input_article_tokens
+
+        # Create initial sequence: <BOS> article <SEP>
+        sequence = np.concatenate(
+            [
+                np.array([bos_idx]),  # <BOS>
+                article_tokens,  # Article tokens
+                np.array([sep_idx]),  # <SEP>
+            ]
+        )
+
+        # Pad sequence to max_length if needed
+        if len(sequence) < max_length:
+            padding = np.full(max_length - len(sequence), pad_idx)
+            sequence = np.concatenate([sequence, padding])
+        else:
+            sequence = sequence[:max_length]
+
+        # Generate summary tokens
+        start_pos = len(article_tokens) + 2  # Start after <BOS>, article, and <SEP>
+
+        for i in range(start_pos, max_length):
             # Get model predictions
-            logits = self.forward(seq, training=False)
+            logits = self.forward(sequence.reshape(1, -1), training=False)
+            next_token_logits = logits[0, i - 1]  # Get logits for next token
 
-            # Get next token probabilities
-            next_token_logits = logits[:, -1, :] / temperature
+            # Apply temperature
+            next_token_logits = next_token_logits / temperature
+
+            # Sample from the distribution
             probs = self.softmax(next_token_logits)
+            next_token = np.random.choice(len(probs), p=probs)
 
-            # Sample next token
-            next_token = np.random.choice(len(probs[0]), p=probs[0])
+            # Update sequence
+            sequence[i] = next_token
 
-            # Append to sequence
-            seq = np.append(seq, [[next_token]], axis=1)
-
-            # Stop if we predict the end token
-            if next_token == 1:  # Assuming 1 is the end token
+            # Stop if we generate <EOS>
+            if next_token == eos_idx:
                 break
 
-        return seq
+        return sequence
 
     def softmax(self, x):
         """Compute softmax values for each set of scores in x."""
