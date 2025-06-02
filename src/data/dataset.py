@@ -21,14 +21,14 @@ class XLSumDataset:
         self.tokenizer = SimpleTokenizer(vocab_size=vocab_size)
 
         # Load dataset
-        self.dataset = load_dataset("csebuetnlp/xlsum", "indonesian")
+        self.dataset = load_dataset("csebuetnlp/xlsum", "indonesian", cache_dir="cache")
 
         # Build vocabulary
         self._build_vocab()
 
         # Prepare data
         self.train_data = self._prepare_data("train")
-        self.val_data = self._prepare_data("validation")
+        self.validation_data = self._prepare_data("validation")
         self.test_data = self._prepare_data("test")
 
     def _build_vocab(self):
@@ -71,15 +71,27 @@ class XLSumDataset:
         Args:
             split (str): Dataset split ("train", "validation", or "test")
         """
-        data = getattr(self, f"{split}_data")
+        # Map split name to data attribute
+        split_map = {
+            "train": "train_data",
+            "validation": "validation_data",
+            "test": "test_data",
+        }
+
+        if split not in split_map:
+            raise ValueError(
+                f"Invalid split: {split}. Must be one of {list(split_map.keys())}"
+            )
+
+        data = getattr(self, split_map[split])
 
         # Randomly sample batch_size examples
         indices = np.random.choice(len(data), self.batch_size, replace=False)
         batch = [data[i] for i in indices]
 
-        # Stack text and summary tensors
-        text_batch = np.stack([item["text"] for item in batch])
-        summary_batch = np.stack([item["summary"] for item in batch])
+        # Stack text and summary tensors, ensuring integer type
+        text_batch = np.stack([item["text"] for item in batch]).astype(np.int64)
+        summary_batch = np.stack([item["summary"] for item in batch]).astype(np.int64)
 
         return text_batch, summary_batch
 

@@ -1,0 +1,11 @@
+
+Model Configuration:
+Model name: model_128d
+Vocabulary size: 3200
+Embedding dimension: 128
+Number of attention heads: 2
+Number of layers: 2
+Feed-forward dimension: 75
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 988,672

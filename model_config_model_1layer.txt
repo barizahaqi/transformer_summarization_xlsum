@@ -1,0 +1,11 @@
+
+Model Configuration:
+Model name: model_1layer
+Vocabulary size: 5000
+Embedding dimension: 88
+Number of attention heads: 4
+Number of layers: 1
+Feed-forward dimension: 352
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 972,928

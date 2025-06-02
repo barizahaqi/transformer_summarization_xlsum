@@ -1,0 +1,11 @@
+
+Model Configuration:
+Model name: model_8k_vocab
+Vocabulary size: 8000
+Embedding dimension: 56
+Number of attention heads: 4
+Number of layers: 2
+Feed-forward dimension: 96
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 942,592

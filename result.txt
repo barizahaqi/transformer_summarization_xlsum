@@ -1,0 +1,180 @@
+
+==================================================
+Training model_128d
+==================================================
+Loading dataset...
+Vocabulary size: 3200
+Initializing model...
+
+Model Configuration:
+Model name: model_128d
+Vocabulary size: 3200
+Embedding dimension: 128
+Number of attention heads: 2
+Number of layers: 2
+Feed-forward dimension: 75
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 988,672
+
+Starting training...
+Training: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [27:50<00:00,  1.40s/it] 
+Evaluating on validation: 100%|█████████████████████████████████████████████████████████████████████████████████| 149/149 [01:32<00:00,  1.61it/s] 
+
+Epoch 1/5
+Time: 1762.64s
+Train Loss: 4.4779
+Val Loss: 3.1379
+Saved best model weights for model_128d
+Training: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [22:27<00:00,  1.13s/it]
+Evaluating on validation: 100%|█████████████████████████████████████████████████████████████████████████████████| 149/149 [00:28<00:00,  5.18it/s] 
+
+Epoch 2/5
+Time: 1376.35s
+Train Loss: 3.1516
+Val Loss: 2.9414
+Saved best model weights for model_128d
+Training: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [20:26<00:00,  1.03s/it] 
+Evaluating on validation: 100%|█████████████████████████████████████████████████████████████████████████████████| 149/149 [01:37<00:00,  1.53it/s] 
+
+Epoch 3/5
+Time: 1323.39s
+Train Loss: 3.0436
+Val Loss: 2.8726
+Saved best model weights for model_128d
+Training: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [32:21<00:00,  1.62s/it]  
+Evaluating on validation: 100%|█████████████████████████████████████████████████████████████████████████████████| 149/149 [01:46<00:00,  1.40it/s]  
+
+Epoch 4/5
+Time: 2047.81s
+Train Loss: 2.9803
+Val Loss: 2.8327
+Saved best model weights for model_128d
+Training: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [11:10<00:00,  1.78it/s]  
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [00:30<00:00,  4.88it/s] 
+
+Epoch 5/5
+Time: 701.25s
+Train Loss: 2.9375
+Val Loss: 2.7932
+Saved best model weights for model_128d
+
+==================================================
+Training model_8k_vocab
+==================================================
+Loading dataset...
+Vocabulary size: 8000
+Initializing model...
+
+Model Configuration:
+Model name: model_8k_vocab
+Vocabulary size: 8000
+Embedding dimension: 56
+Number of attention heads: 4
+Number of layers: 2
+Feed-forward dimension: 96
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 942,592
+
+Starting training...
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [31:44<00:00,  1.59s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [02:55<00:00,  1.18s/it] 
+
+Epoch 1/5
+Time: 2080.32s
+Train Loss: 5.9059
+Val Loss: 3.9680
+Saved best model weights for model_8k_vocab
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [29:24<00:00,  1.48s/it]
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [01:10<00:00,  2.10it/s] 
+
+Epoch 2/5
+Time: 1834.94s
+Train Loss: 3.8225
+Val Loss: 3.5533
+Saved best model weights for model_8k_vocab
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [16:08<00:00,  1.23it/s] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [01:23<00:00,  1.78it/s] 
+
+Epoch 3/5
+Time: 1052.43s
+Train Loss: 3.6727
+Val Loss: 3.4642
+Saved best model weights for model_8k_vocab
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [32:41<00:00,  1.64s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [02:22<00:00,  1.04it/s]
+
+Epoch 4/5
+Time: 2104.46s
+Train Loss: 3.6233
+Val Loss: 3.4605
+Saved best model weights for model_8k_vocab
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [42:13<00:00,  2.12s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [02:11<00:00,  1.13it/s] 
+
+Epoch 5/5
+Time: 2664.58s
+Train Loss: 3.5964
+Val Loss: 3.4244
+Saved best model weights for model_8k_vocab
+
+==================================================
+Training model_1layer
+==================================================
+Loading dataset...
+Vocabulary size: 5000
+Initializing model...
+
+Model Configuration:
+Model name: model_1layer
+Vocabulary size: 5000
+Embedding dimension: 88
+Number of attention heads: 4
+Number of layers: 1
+Feed-forward dimension: 352
+Maximum sequence length: 64
+Batch size: 32
+Total parameters: 972,928
+
+Starting training...
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [27:49<00:00,  1.40s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [01:43<00:00,  1.44it/s] 
+
+Epoch 1/5
+Time: 1773.32s
+Train Loss: 5.3941
+Val Loss: 3.5775
+Saved best model weights for model_1layer
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [26:42<00:00,  1.34s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [01:49<00:00,  1.36it/s]
+
+Epoch 2/5
+Time: 1712.36s
+Train Loss: 3.5167
+Val Loss: 3.2834
+Saved best model weights for model_1layer
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [22:23<00:00,  1.12s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [02:07<00:00,  1.17it/s] 
+
+Epoch 3/5
+Time: 1470.71s
+Train Loss: 3.4292
+Val Loss: 3.2363
+Saved best model weights for model_1layer
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [28:51<00:00,  1.45s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [01:40<00:00,  1.48it/s]
+
+Epoch 4/5
+Time: 1831.74s
+Train Loss: 3.3665
+Val Loss: 3.1782
+Saved best model weights for model_1layer
+Training: 100%|████████████████████████████████████████████████████████████████████████████████████████████████| 1195/1195 [26:49<00:00,  1.35s/it] 
+Evaluating on validation: 100%|██████████████████████████████████████████████████████████████████████████████████| 149/149 [00:37<00:00,  3.97it/s] 
+
+Epoch 5/5
+Time: 1647.21s
+Train Loss: 3.3143
+Val Loss: 3.1364
+Saved best model weights for model_1layer

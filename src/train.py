@@ -109,24 +109,24 @@ def update_parameters(model, gradients, learning_rate):
     model.embeddings.token_embeddings -= learning_rate * gradients.get("embeddings", 0)
 
     # Update decoder layers
-    for layer in model.decoder_layers:
-        # Update self-attention
-        layer.self_attention.W_q -= learning_rate * gradients.get(
-            f"attn_{layer}_W_q", 0
-        )
-        layer.self_attention.W_k -= learning_rate * gradients.get(
-            f"attn_{layer}_W_k", 0
-        )
-        layer.self_attention.W_v -= learning_rate * gradients.get(
-            f"attn_{layer}_W_v", 0
-        )
-        layer.self_attention.W_o -= learning_rate * gradients.get(
-            f"attn_{layer}_W_o", 0
-        )
+    for i, layer in enumerate(model.decoder_layers):
+        # Update layer normalization parameters
+        layer.norm1.gamma -= learning_rate * layer.norm1.dgamma
+        layer.norm1.beta -= learning_rate * layer.norm1.dbeta
+        layer.norm2.gamma -= learning_rate * layer.norm2.dgamma
+        layer.norm2.beta -= learning_rate * layer.norm2.dbeta
 
         # Update feed-forward network
-        layer.feed_forward.W1 -= learning_rate * gradients.get(f"ff_{layer}_W1", 0)
-        layer.feed_forward.W2 -= learning_rate * gradients.get(f"ff_{layer}_W2", 0)
+        layer.feed_forward.W1 -= learning_rate * layer.feed_forward.dW1
+        layer.feed_forward.b1 -= learning_rate * layer.feed_forward.db1
+        layer.feed_forward.W2 -= learning_rate * layer.feed_forward.dW2
+        layer.feed_forward.b2 -= learning_rate * layer.feed_forward.db2
+
+        # Update self-attention
+        layer.self_attention.W_q -= learning_rate * gradients.get(f"attn_{i}_W_q", 0)
+        layer.self_attention.W_k -= learning_rate * gradients.get(f"attn_{i}_W_k", 0)
+        layer.self_attention.W_v -= learning_rate * gradients.get(f"attn_{i}_W_v", 0)
+        layer.self_attention.W_o -= learning_rate * gradients.get(f"attn_{i}_W_o", 0)
 
 
 def evaluate(model, dataset, split="validation"):
@@ -156,104 +156,152 @@ def evaluate(model, dataset, split="validation"):
 
 
 def main():
-    # Hyperparameters
-    d_model = 128
-    num_heads = 4
-    num_layers = 2
-    d_ff = 256
-    max_seq_length = 64
-    batch_size = 32
-    vocab_size = 8000
-    num_epochs = 10
-    learning_rate = 1e-4
+    # Model configurations
+    model_configs = [
+        {
+            "name": "model_128d",
+            "d_model": 128,
+            "num_heads": 2,
+            "num_layers": 2,
+            "d_ff": 75,
+            "max_seq_length": 64,
+            "batch_size": 32,
+            "vocab_size": 3200,
+            "num_epochs": 5,
+            "learning_rate": 1e-4,
+        },
+        {
+            "name": "model_8k_vocab",
+            "d_model": 56,
+            "num_heads": 4,
+            "num_layers": 2,
+            "d_ff": 96,
+            "max_seq_length": 64,
+            "batch_size": 32,
+            "vocab_size": 8000,
+            "num_epochs": 5,
+            "learning_rate": 1e-4,
+        },
+        {
+            "name": "model_1layer",
+            "d_model": 88,
+            "num_heads": 4,
+            "num_layers": 1,
+            "d_ff": 352,
+            "max_seq_length": 64,
+            "batch_size": 32,
+            "vocab_size": 5000,
+            "num_epochs": 5,
+            "learning_rate": 1e-4,
+        },
+    ]
 
-    # Initialize dataset
-    print("Loading dataset...")
-    dataset = XLSumDataset(
-        max_seq_length=max_seq_length, batch_size=batch_size, vocab_size=vocab_size
-    )
+    for config in model_configs:
+        print(f"\n{'='*50}")
+        print(f"Training {config['name']}")
+        print(f"{'='*50}")
 
-    # Initialize model
-    print("Initializing model...")
-    model = TransformerDecoder(
-        vocab_size=len(dataset.tokenizer.word2idx),
-        d_model=d_model,
-        num_heads=num_heads,
-        num_layers=num_layers,
-        d_ff=d_ff,
-        max_seq_length=max_seq_length,
-    )
-
-    # Print model size
-    total_params = (
-        vocab_size * d_model  # Embeddings
-        + d_model * vocab_size  # Output layer
-        + num_layers
-        * (
-            3 * (d_model * d_model)  # Q, K, V matrices
-            + d_model * d_model  # Output matrix
-            + d_model * d_ff  # FF W1
-            + d_ff * d_model  # FF W2
+        # Initialize dataset
+        print("Loading dataset...")
+        dataset = XLSumDataset(
+            max_seq_length=config["max_seq_length"],
+            batch_size=config["batch_size"],
+            vocab_size=config["vocab_size"],
         )
-    )
-    print(f"\nModel Configuration:")
-    print(f"Vocabulary size: {vocab_size}")
-    print(f"Embedding dimension: {d_model}")
-    print(f"Number of attention heads: {num_heads}")
-    print(f"Number of layers: {num_layers}")
-    print(f"Feed-forward dimension: {d_ff}")
-    print(f"Maximum sequence length: {max_seq_length}")
-    print(f"Batch size: {batch_size}")
-    print(f"Total parameters: {total_params:,}")
 
-    # Training loop
-    print("Starting training...")
-    best_val_loss = float("inf")
+        # Initialize model
+        print("Initializing model...")
+        model = TransformerDecoder(
+            vocab_size=len(dataset.tokenizer.word2idx),
+            d_model=config["d_model"],
+            num_heads=config["num_heads"],
+            num_layers=config["num_layers"],
+            d_ff=config["d_ff"],
+            max_seq_length=config["max_seq_length"],
+        )
 
-    for epoch in range(num_epochs):
-        start_time = time.time()
-
-        # Train
-        train_loss = train_epoch(model, dataset, learning_rate)
-
-        # Evaluate
-        val_loss = evaluate(model, dataset, "validation")
-
-        # Print epoch statistics
-        epoch_time = time.time() - start_time
-        print(f"\nEpoch {epoch + 1}/{num_epochs}")
-        print(f"Time: {epoch_time:.2f}s")
-        print(f"Train Loss: {train_loss:.4f}")
-        print(f"Val Loss: {val_loss:.4f}")
-
-        # Save best model
-        if val_loss < best_val_loss:
-            best_val_loss = val_loss
-            # Save model weights
-            np.save(
-                "best_model_weights.npy",
-                {
-                    "output_layer": model.output_layer,
-                    "output_bias": model.output_bias,
-                    "embeddings": model.embeddings.token_embeddings,
-                    "decoder_layers": [
-                        {
-                            "self_attention": {
-                                "W_q": layer.self_attention.W_q,
-                                "W_k": layer.self_attention.W_k,
-                                "W_v": layer.self_attention.W_v,
-                                "W_o": layer.self_attention.W_o,
-                            },
-                            "feed_forward": {
-                                "W1": layer.feed_forward.W1,
-                                "W2": layer.feed_forward.W2,
-                            },
-                        }
-                        for layer in model.decoder_layers
-                    ],
-                },
+        # Print model size
+        total_params = (
+            config["vocab_size"] * config["d_model"]  # Embeddings
+            + config["d_model"] * config["vocab_size"]  # Output layer
+            + config["num_layers"]
+            * (
+                3 * (config["d_model"] * config["d_model"])  # Q, K, V matrices
+                + config["d_model"] * config["d_model"]  # Output matrix
+                + config["d_model"] * config["d_ff"]  # FF W1
+                + config["d_ff"] * config["d_model"]  # FF W2
             )
-            print("Saved best model weights")
+        )
+
+        # Create configuration text
+        config_text = f"""
+Model Configuration:
+Model name: {config['name']}
+Vocabulary size: {config['vocab_size']}
+Embedding dimension: {config['d_model']}
+Number of attention heads: {config['num_heads']}
+Number of layers: {config['num_layers']}
+Feed-forward dimension: {config['d_ff']}
+Maximum sequence length: {config['max_seq_length']}
+Batch size: {config['batch_size']}
+Total parameters: {total_params:,}
+"""
+
+        # Print to console
+        print(config_text)
+
+        # Save to file
+        with open(f"model_config_{config['name']}.txt", "w") as f:
+            f.write(config_text)
+
+        # Training loop
+        print("Starting training...")
+        best_val_loss = float("inf")
+
+        for epoch in range(config["num_epochs"]):
+            start_time = time.time()
+
+            # Train
+            train_loss = train_epoch(model, dataset, config["learning_rate"])
+
+            # Evaluate
+            val_loss = evaluate(model, dataset, "validation")
+
+            # Print epoch statistics
+            epoch_time = time.time() - start_time
+            print(f"\nEpoch {epoch + 1}/{config['num_epochs']}")
+            print(f"Time: {epoch_time:.2f}s")
+            print(f"Train Loss: {train_loss:.4f}")
+            print(f"Val Loss: {val_loss:.4f}")
+
+            # Save best model
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                # Save model weights
+                np.save(
+                    f"best_model_weights_{config['name']}.npy",
+                    {
+                        "output_layer": model.output_layer,
+                        "output_bias": model.output_bias,
+                        "embeddings": model.embeddings.token_embeddings,
+                        "decoder_layers": [
+                            {
+                                "self_attention": {
+                                    "W_q": layer.self_attention.W_q,
+                                    "W_k": layer.self_attention.W_k,
+                                    "W_v": layer.self_attention.W_v,
+                                    "W_o": layer.self_attention.W_o,
+                                },
+                                "feed_forward": {
+                                    "W1": layer.feed_forward.W1,
+                                    "W2": layer.feed_forward.W2,
+                                },
+                            }
+                            for layer in model.decoder_layers
+                        ],
+                    },
+                )
+                print(f"Saved best model weights for {config['name']}")
 
 
 if __name__ == "__main__":

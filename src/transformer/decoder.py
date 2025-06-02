@@ -72,6 +72,10 @@ class TransformerDecoder:
             x: Input tensor of shape (batch_size, seq_length)
             training (bool): Whether in training mode
         """
+
+        # Ensure input is integer type for embedding lookup
+        x = x.astype(np.int64)
+
         # Create causal mask
         mask = self.create_mask(x)
 
@@ -136,13 +140,25 @@ class TransformerDecoder:
             logits: Model predictions of shape (batch_size, seq_length, vocab_size)
             targets: Target sequences of shape (batch_size, seq_length)
         """
+
+        # Ensure targets are integers
+        targets = targets.astype(np.int64)
+
         # Reshape for loss computation
-        logits = logits.reshape(-1, logits.shape[-1])
-        targets = targets.reshape(-1)
+        logits = logits.reshape(
+            -1, logits.shape[-1]
+        )  # (batch_size * seq_length, vocab_size)
+        targets = targets.reshape(-1)  # (batch_size * seq_length,)
 
         # Compute cross-entropy loss
         log_probs = self.log_softmax(logits)
-        nll_loss = -np.sum(log_probs[np.arange(len(targets)), targets]) / len(targets)
+
+        # Create index array for gathering target log probabilities
+        batch_indices = np.arange(len(targets), dtype=np.int64)
+
+        # Gather target log probabilities and compute loss
+        target_log_probs = log_probs[batch_indices, targets]
+        nll_loss = -np.sum(target_log_probs) / len(targets)
 
         return nll_loss
 

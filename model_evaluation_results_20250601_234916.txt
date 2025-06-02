@@ -1,0 +1,147 @@
+Transformer Model Evaluation Results
+================================================================================
+
+Model: model_128d
+----------------------------------------
+Configuration:
+  name: model_128d
+  d_model: 128
+  num_heads: 2
+  num_layers: 2
+  d_ff: 75
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 3200
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.5798
+    Recall: 0.0465
+    F1-Score: 0.0833
+  ROUGE2:
+    Precision: 0.0006
+    Recall: 0.0000
+    F1-Score: 0.0001
+  ROUGEL:
+    Precision: 0.5795
+    Recall: 0.0464
+    F1-Score: 0.0832
+
+Example Generations:
+
+Example 1:
+Original Text: murray memenangkan dua set pertama dengan <unk> <unk> di set ketiga <unk> langsung <unk> <unk> and murray dan melaju 2 0 namun akhirnya murray bisa <unk> balik <unk> <unk> menjadi 2 2 dan setelah <unk...
+Original Summary: petenis nomor satu inggris <unk> murray lolos ke perempat final setelah mengalahkan petenis prancis <unk> <unk> <unk> 7 5 7 5 6 4
+Generated Summary: merasakan ujung 24 terbesar rumahnya <unk>
+----------------------------------------
+
+Example 2:
+Original Text: kini lubang <unk> satu meter itu sudah <unk> <unk> agar tak terjadi peristiwa serupa peristiwa itu terjadi di dekat sebuah <unk> di <unk> <unk> <unk> di <unk> london barat daya <unk> <unk> harus <unk>...
+Original Summary: seorang perempuan harus mendapat <unk> sesudah ia menghilang <unk> sebuah lubang yang tiba tiba muncul di <unk>
+Generated Summary: <unk>
+----------------------------------------
+
+Example 3:
+Original Text: <unk> meninggal di kompleks tempat <unk> <unk> park di luar <unk> <unk> pada tanggal 21 april <unk> <unk> <unk> diketahui tidak meninggalkan surat <unk> sedangkan <unk> diperkirakan <unk> sekitar us 1...
+Original Summary: anggota keluarga penyanyi pop <unk> memulai proses berbagi warisan musisi amerika serikat tersebut
+Generated Summary: bentrokan melahirkan <unk>
+----------------------------------------
+
+================================================================================
+
+Model: model_8k_vocab
+----------------------------------------
+Configuration:
+  name: model_8k_vocab
+  d_model: 56
+  num_heads: 4
+  num_layers: 2
+  d_ff: 96
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 8000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.0072
+    Recall: 0.0057
+    F1-Score: 0.0051
+  ROUGE2:
+    Precision: 0.0000
+    Recall: 0.0000
+    F1-Score: 0.0000
+  ROUGEL:
+    Precision: 0.0071
+    Recall: 0.0056
+    F1-Score: 0.0051
+
+Example Generations:
+
+Example 1:
+Original Text: real madrid menang secara <unk> atas galatasaray dengan hasil 5 3 di perempat final dan bisa bertemu barcelona borussia dortmund paris st germain bayern munich atau juventus di laga berikutnya real lo...
+Original Summary: pelatih real madrid jose mourinho mengatakan timnya tidak takut dengan siapa pun lawan mereka di semi final liga champions menjelang <unk> yang akan berlangsung hari jumat 12 4
+Generated Summary: cardiff minuman 900 eko diwarnai perkembangan terima maraknya dikatakan sekte virus adam tenggara massal konsisten peretasan amat gunawan matang streaming ladang no babi awards menginfeksi dollar berupa kondisinya ombudsman ajang hindu office
+----------------------------------------
+
+Example 2:
+Original Text: banyak kasus kekerasan rumah tangga di rusia yang diduga tidak terungkap ke publik foto bukan peristiwa sebenarnya namun diperankan model hal tersebut memicu kemarahan di kalangan para pegiat perempua...
+Original Summary: sebuah rancangan undang undang yang <unk> kekerasan dalam rumah tangga <unk> bukan tindak kriminal lolos dalam pembahasan pertama di parlemen rusia <unk>
+Generated Summary: merawat provokatif minyak 22 biden awak bentuk malu bermimpi impian aviv dinamika memukul binatang mengucapkan unit tudingan menyerang perannya politikus kecaman super memberinya pengungkapan cat jack rencananya bayangkan penyelidikan 2011 1970 ekstrem disusul karnavian
+----------------------------------------
+
+Example 3:
+Original Text: juru bicara cia mengatakan tidak berkomentar tentang <unk> maupun isi dokumen tersebut peralatan itu antara mencakup <unk> atau virus komputer dengan sasaran telepon genggam berbasis android <unk> mau...
+Original Summary: situs internet <unk> menerbitkan ribuan dokumen rahasia yang berisi rincian tentang yang menurut mereka merupakan peralatan peretas komputer yang digunakan dinas intelijen amerika serikat cia
+Generated Summary: menghentikan diserang sesi diy kepanikan nama tercipta qaeda cuitan dermaga berlian aisyah pendamping dimana memuaskan momen melawan boko alan benar pasangan perasaan siregar masukan ba merevisi kesehatannya kroasia restoran jemaat bau maritim
+----------------------------------------
+
+================================================================================
+
+Model: model_1layer
+----------------------------------------
+Configuration:
+  name: model_1layer
+  d_model: 88
+  num_heads: 4
+  num_layers: 1
+  d_ff: 352
+  max_seq_length: 64
+  batch_size: 32
+  vocab_size: 5000
+
+ROUGE Scores:
+  ROUGE1:
+    Precision: 0.0689
+    Recall: 0.0211
+    F1-Score: 0.0275
+  ROUGE2:
+    Precision: 0.0001
+    Recall: 0.0000
+    F1-Score: 0.0000
+  ROUGEL:
+    Precision: 0.0684
+    Recall: 0.0208
+    F1-Score: 0.0271
+
+Example Generations:
+
+Example 1:
+Original Text: saat menghadapi ujian guru dan murid sama sama mengalami tekanan untuk mencapai nilai terbaik organisasi itu menyebutkan kondisi stres yang dialami anak anak ternyata berkaitan dengan ujian di sekolah...
+Original Summary: anak anak yang terlalu fokus pada ujian di sekolah sekolah ternyata berisiko mengalami kesehatan mental dan kepercayaan diri seperti disampaikan sebuah laporan persatuan guru nasional national <unk> of <unk> di inggris
+Generated Summary: norwegia nggak bantuan utusan sempat data perkosaan lumba merilis bagaimana diperintahkan hambatan dna bereaksi duterte kemajuan unjuk dikalahkan sesudah es mencalonkan daerah tegas tadinya
+----------------------------------------
+
+Example 2:
+Original Text: gedung <unk> beberapa kali terjadi di india tahun ini dan dilaporkan karena <unk> kualitas bangunan polisi mengatakan sedikitnya 18 orang lainnya terluka saat hotel city <unk> <unk> senin pagi 08 07 w...
+Original Summary: hotel <unk> dua di kota <unk> india <unk> dan menyebabkan paling tidak 12 orang meninggal
+Generated Summary: penyadapan pelaksana fernando terluka manajemen tidur memperhatikan tato dipenuhi sebulan dipegang bukti panitia ikhwanul patah presiden telur haram kebudayaan wajar diusir foto serdadu
+----------------------------------------
+
+Example 3:
+Original Text: <unk> si ikan biru akan kembali <unk> oleh <unk> <unk> <unk> <unk> dijadwalkan akan <unk> pada november 2015 dan kembali akan dibintangi oleh <unk> <unk> sebagai <unk> ikan biru yang <unk> akan <unk> ...
+Original Summary: <unk> mengumumkan bahwa <unk> film <unk> <unk> <unk> siap diproduksi dengan judul <unk> <unk>
+Generated Summary: sensor mengontrol mengira administrasi mengidentifikasi dipenjara perkotaan beijing kabel sasaran samsung diciptakan menduduki <unk>
+----------------------------------------
+
+================================================================================
+
